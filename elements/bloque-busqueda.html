@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <!-- Dependencias/Elementos -->
+    <link rel="import" href="../bower_components/polymer/polymer.html">
+   
+	
+</head>
+
+<dom-module id="bloque-busqueda">
+  <style is="custom-style">
+    /* Reglas CSS para tu elemento */
+	
+  .caption {
+    padding-left: 12px;
+    color: #a0a0a0;
+  }
+  #grade {
+    --paper-slider-secondary-color: var(--paper-red-a200);
+  }
+
+  </style>
+  
+  <template>
+      <!-- Data-bindings del DOM local -->
+
+    <paper-material class="todo" elevation="1">
+    <paper-material class="todo" elevation="1">  
+	  <div>Precios: <span id="ratingsLabel" class="caption"></span></div><br>
+      <paper-slider id="ratings" pin snaps max="10" max-markers="10" step="1" value="5"></paper-slider>
+	 </paper-material>   
+  <paper-material class="todo" elevation="1">  
+	<paper-tabs selected="0">
+	   <div>Lugares: <span id="ratingsLabel" class="caption"></span></div><br>
+	  <paper-tab>Cualquiera</paper-tab>
+	  <paper-tab>Europa</paper-tab>
+	  <paper-tab>España</paper-tab>
+	</paper-tabs>
+ </paper-material> 
+   
+     <desplegable-busqueda nombre="Tipo de viaje" tipos='{"a": "Aventura", "b": "Conferencias", "c": "Otros"}'></desplegable-busqueda>
+	 <desplegable-busqueda nombre="Edad" tipos='{"a": "30-10", "b": "40-50", "c": "70--"}'></desplegable-busqueda>
+    </paper-material>
+</template>
+</dom-module>
+
+<script>
+
+  Polymer({
+    is: "bloque-busqueda",
+    properties: {
+        // declaramos las propiedades del elemento
+
+         tipos: Object
+		,
+        task: {
+            type: String,
+            value: "Hola!"
+        },
+        rid: {
+            type: Number,
+            value: -1
+        },
+        time: {
+            type: String,
+            value: new Date().toLocaleString()
+        },
+        completed: {
+            type: Boolean,
+            value: false,
+            observer:'compChanged'
+        },
+        editing: {
+            type: Boolean,
+            value: false    
+        }
+    },
+    compChanged: function(e){
+        if(e){ this.fire('complete',this); }
+    },
+    doEdit: function(e){
+        this.editing=!this.editing;
+    },
+	_toArray: function(obj) {
+            return Object.keys(obj).map(function(key) {
+                return {
+                    name: key,
+                    value: obj[key]
+                };
+            });
+        }
+  });
+</script>

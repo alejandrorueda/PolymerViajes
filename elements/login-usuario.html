@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <!-- Dependencias/Elementos -->
+    <link rel="import" href="../bower_components/polymer/polymer.html">
+
+	
+</head>
+
+<dom-module id="login-usuario">
+  <style is="custom-style">
+    /* Reglas CSS para tu elemento */
+	 paper-button.custom:hover {
+        background-color: var(--paper-indigo-100);
+    }
+ 
+    paper-button.indigo {
+        background-color: var(--paper-indigo-500);
+        color: white;
+        --paper-button-raised-keyboard-focus: {
+            background-color: var(--paper-pink-a200) !important;
+            color: white !important;
+        };
+    }
+	.caja{
+	  //max-width: 76%;
+	
+	}
+	
+	
+	
+  </style>
+  <style include="iron-flex"></style>
+  <template>
+      <!-- Data-bindings del DOM local -->
+<paper-material elevation="1" class="caja">
+		  
+			 <form is="iron-form" method="get" action="/service/script.php" id="sesion">
+		 
+						
+							<paper-input name="usuario" label="Usuario" value="{{usuario}}" required></paper-input>
+							<paper-input name="password" type="password" label="Contraseña" value="{{password}}" required></paper-input> 
+						
+						<paper-input name="tipo"  type="hidden" style="display: none;" value="{{tipo}}" maxlength="25"></paper-input>
+						 <paper-button raised class="custom indigo" onclick="document.getElementById('sesion').submit()">
+						  <iron-icon icon="icons:send"></iron-icon>
+							 Enviar
+						 </paper-button>
+
+					<br>
+					<div class="info-loginServer"></div>
+				</form>
+	 
+	   <p>Si aun no estas registrado los puedes hacer <a data-route="contact" href="{{baseUrl}}registro">aquí</a></p>
+
+</paper-material>
+
+	    <!--<app-indexeddb-mirror
+		session="login"
+        key="prueba"
+		data="{{info}}"
+        persisted-data="{{persistedData}}"
+		zeroValue="0"
+		worker-url="/public_html/bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror-worker.js"
+		> </app-indexeddb-mirror>
+		<p>{{persistedData.Idusuario}}</p>-->
+     <!--<template id="tasks" is="dom-repeat" items="{{response}}">
+			<p>{{item.NOMBRE}}</p>
+           
+      </template>-->
+
+</template>
+</dom-module>
+
+<script>
+(function() {
+var info;   
+
+  Polymer({
+    is: "login-usuario",
+         properties: {
+		    persistedData: {
+			   type: Object
+			},
+		    tipo:{
+               type: String,
+               value: "login"
+            },
+            usuario: {
+                type: String,
+                value: ""
+            },
+            password: {
+                type: String,
+                value:""
+            },
+            info: {
+                type: Object,
+				notify: true,
+                value: {
+				   iniciado: false
+				}
+            }
+        },
+        listeners: {
+            'iron-form-response': 'formResponse',
+            'iron-form-submit': 'formSubmit',
+            'iron-form-error': 'formError'
+        },
+        formSubmit: function (event) {
+           // this.querySelector('.info-login').innerHTML = JSON.stringify(event.detail);
+        },
+        formResponse: function (event, response) {
+            console.log(event.detail);
+            if (200 === response.xhr.status) {
+                var data = response.xhr;
+                console.log(response);
+				this.info= data.response;
+                
+                console.log("info ");
+				console.log(this.info);
+				if(this.info.exito){
+				this.info.iniciado = true;
+				document.location.href = '/';
+				}else{
+				this.querySelector('.info-loginServer').innerHTML = "Los datos son incorrectos";
+				}
+            }
+        },
+        formError: function (event) {
+            this.querySelector('.info-loginServer').innerHTML = event.detail.error;
+        },
+		initializeDefaultCartoon: function() {
+		  this.info = {
+			Idusuario: "pepe"
+		  }
+		},
+		cargar: function() {
+		   this.info=info;
+		
+		}
+  });
+ })();
+</script>

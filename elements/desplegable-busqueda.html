@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <!-- Dependencias/Elementos -->
+    <link rel="import" href="../bower_components/polymer/polymer.html">
+
+  
+	
+</head>
+<dom-module id="desplegable-busqueda">
+  <style>
+    /* Reglas CSS para tu elemento */
+  </style>
+  <template>
+      <!-- Data-bindings del DOM local -->
+    <paper-material class="todo" elevation="1">
+      <paper-dropdown-menu label="{{nombre}}">
+		  <paper-listbox class="dropdown-content">
+		   <template id="tasks" is="dom-repeat" items="{{_toArray(tipos)}}">
+			<paper-item>{{item.value}}</paper-item>
+           </template>
+	   </paper-listbox>
+	   
+     </paper-dropdown-menu>
+    </paper-material>
+
+</template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: "desplegable-busqueda",
+    properties: {
+        // declaramos las propiedades del elemento
+
+         tipos: Object
+		,
+        task: {
+            type: String,
+            value: "Hola!"
+        },
+        nombre: {
+            type: String,
+            value: "select"
+        },
+        time: {
+            type: String,
+            value: new Date().toLocaleString()
+        },
+        completed: {
+            type: Boolean,
+            value: false,
+            observer:'compChanged'
+        },
+        editing: {
+            type: Boolean,
+            value: false    
+        }
+    },
+    compChanged: function(e){
+        if(e){ this.fire('complete',this); }
+    },
+    doEdit: function(e){
+        this.editing=!this.editing;
+    },
+	_toArray: function(obj) {
+            return Object.keys(obj).map(function(key) {
+                return {
+                    name: key,
+                    value: obj[key]
+                };
+            });
+        }
+  });
+</script>

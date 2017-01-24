@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <!-- Dependencias/Elementos -->
+    <link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+</head>
+
+<dom-module id="registro-usuario">
+  <style is="custom-style">
+    /* Reglas CSS para tu elemento */
+	 paper-button.custom:hover {
+        background-color: var(--paper-indigo-100);
+    }
+
+    paper-button.indigo {
+        background-color: var(--paper-indigo-500);
+        color: white;
+        --paper-button-raised-keyboard-focus: {
+            background-color: var(--paper-pink-a200) !important;
+            color: white !important;
+        };
+    }
+  </style>
+
+  <template>
+      <!-- Data-bindings del DOM local -->
+
+
+
+<!--<form is="iron-form" method="get" action="/" id="basic">
+  <paper-input name="usuario" label="Nombre de usuario" required></paper-input>
+  <paper-input name="nombre" label="Nombre" required></paper-input>
+  <paper-input name="apellido" label="Apellidos" required></paper-input>
+  <paper-input name="password" label="Constraseña" type="password" required></paper-input>
+  <gold-email-input label="Dirección de correo electronico"></gold-email-input>
+  <br>
+  <paper-dropdown-menu label="Cars" name="cars" required>
+    <paper-menu class="dropdown-content">
+      <paper-item value="volvo">Volvo</paper-item>
+      <paper-item value="saab">Saab</paper-item>
+      <paper-item value="fiat">Fiat</paper-item>
+      <paper-item value="audi">Audi</paper-item>
+    </paper-menu>
+  </paper-dropdown-menu>
+  <paper-button raised onclick="_submit(event)">Submit</paper-button>
+  <paper-button raised onclick="_reset(event)">Reset</paper-button>
+  <div class="output"></div>
+</form>-->
+
+     <form is="iron-form" method="get" action="/service/script.php" id="formExample">
+
+            <paper-input char-counter error-message="{{error_username}}" name="username" value="{{username}}" label="Nombre de usuario" maxlength="25"
+                         required></paper-input>
+            <br>
+            <paper-input name="nombre" label="Nombre" value="{{name}}" error-message="{{error_name}}" maxlength="25" required></paper-input>
+            <paper-input name="apellido" label="Apellidos" value="{{lastname}}" error-message="{{error_lastname}}" maxlength="25" required></paper-input>
+            <paper-input name="password" label="Constraseña" type="password" value="{{password}}" error-message="{{error_password}}" maxlength="25" required></paper-input>
+            <gold-email-input label="Dirección de correo electronico" name="email" value="{{email}}" error-message="{{error_email}}" maxlength="25" required></gold-email-input>
+			<paper-input name="fileToUpload" id="fileToUpload" label="Avatar" type="file" value="{{fileToUpload}}" maxlength="25"></paper-input>
+
+            <paper-input name="tipo"  type="hidden" style="display: none;" value="{{tipo}}" maxlength="25"></paper-input>
+            <paper-dropdown-menu label="Cars" name="cars" required>
+                <paper-menu class="dropdown-content">
+                    <paper-item value="volvo">Volvo</paper-item>
+                    <paper-item value="saab">Saab</paper-item>
+                    <paper-item value="fiat">Fiat</paper-item>
+                    <paper-item value="audi">Audi</paper-item>
+                </paper-menu>
+            </paper-dropdown-menu>
+            <br>
+
+            <paper-checkbox name="terms" required>I agree</paper-checkbox>
+            <br><br>
+
+            <paper-button raised class="custom indigo" onclick="document.getElementById('formExample').submit()">
+                <iron-icon icon="icons:send"></iron-icon>
+                Enviar1
+            </paper-button>
+
+            <div class="output"></div>
+            <br>
+            <div class="outputServer"></div>
+            <br>
+        </form>
+     <!--<template id="tasks" is="dom-repeat" items="{{response}}">
+			<p>{{item.NOMBRE}}</p>
+
+      </template>-->
+
+</template>
+</dom-module>
+
+<script>
+
+
+  Polymer({
+    is: "registro-usuario",
+         properties: {
+		    tipo:{
+               type: String,
+               value: "registrar"
+            },
+            username: {
+                type: String,
+                value: ""
+            },
+            error_username: {
+                type: String,
+                value:"Nombre de usuario invalido"
+            },
+            error_name: {
+                type: String,
+                value: "Nombre invalido"
+            },
+            name: {
+                type: String,
+                value: ""
+            },
+            lastname: {
+                type: String,
+                value: ""
+            },
+            error_lastname: {
+                type: String,
+                value: "Apellido invalido"
+            },
+            email: {
+                type: String,
+                value: ""
+            },
+            error_email: {
+                type: String,
+                value: "Email invalido"
+            },
+            password: {
+                type: String,
+                value: ""
+            },
+            error_password: {
+                type: String,
+                value: "Contraseña invalida"
+            },
+            fileToUpload: {
+                type: String,
+                value: ""
+            }
+        },
+        listeners: {
+            'iron-form-response': 'formResponse',
+            'iron-form-submit': 'formSubmit',
+            'iron-form-error': 'formError'
+        },
+        formSubmit: function (event) {
+          //  this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
+        },
+        formResponse: function (event, response) {
+            console.log(event.detail);
+            if (200 === response.xhr.status) {
+                var data = response.xhr;
+                console.log(response);
+                this.querySelector('.outputServer').innerHTML = data.response.res;
+            }
+        },
+        formError: function (event) {
+            this.querySelector('.outputServer').innerHTML = event.detail.error;
+        }
+  });
+</script>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <!-- Dependencias/Elementos -->
+    <link rel="import" href="../bower_components/polymer/polymer.html">
+
+</head>
+<dom-module id="todo-element">
+  <style>
+    /* Reglas CSS para tu elemento */
+  </style>
+  <template>
+      <!-- Data-bindings del DOM local -->
+      <paper-material class="todo" elevation="1">
+        <paper-checkbox checked="{{completed}}"></paper-checkbox>
+        <paper-button hidden={{editing}} on-tap="doEdit" class="edit" raised><iron-icon icon="create"></iron-icon>Editar</paper-button>
+	<paper-button hidden={{!editing}} on-tap="doEdit" class="done" raised><iron-icon icon="done"></iron-icon>Guardar</paper-button>
+        <paper-item hidden="{{editing}}" id="task">{{task}}</paper-item>
+        <paper-input id="edit" hidden="{{!editing}}" value="{{task}}"></paper-input>
+        <paper-item>Created by: <span>{{user}}</span></paper-item>
+        <paper-item>{{time}}</paper-item>
+      </paper-material>
+</template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: "todo-element",
+    properties: {
+        // declaramos las propiedades del elemento
+        user: {
+            type: String,
+            value: ""   
+        },
+        task: {
+            type: String,
+            value: "Hola!"
+        },
+        rid: {
+            type: Number,
+            value: -1
+        },
+        time: {
+            type: String,
+            value: new Date().toLocaleString()
+        },
+        completed: {
+            type: Boolean,
+            value: false,
+            observer:'compChanged'
+        },
+        editing: {
+            type: Boolean,
+            value: false    
+        }
+    },
+    compChanged: function(e){
+        if(e){ this.fire('complete',this); }
+    },
+    doEdit: function(e){
+        this.editing=!this.editing;
+    },
+  });
+</script>

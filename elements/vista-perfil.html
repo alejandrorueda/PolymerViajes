@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <!-- Dependencias/Elementos -->
+    <link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+</head>
+
+<dom-module id="vista-viaje">
+  <style is="custom-style">
+    /* Reglas CSS para tu elemento */
+
+            .caption {
+                padding-left: 12px;
+                color: #a0a0a0;
+            }
+            #grade {
+                --paper-slider-secondary-color: var(--paper-red-a200);
+            }
+
+          :host {
+          @apply (--layout-fit);
+          @apply (--layout-vertical);
+
+          display: block;
+          font-family: sans-serif;
+        }
+
+        #searchTerm {
+          padding: 0 16px;
+        }
+
+        .toolbar {
+          background: #E91E63;
+          box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+          color: white;
+        }
+
+        #list {
+          @apply (--layout-flex);
+
+        }
+
+        .item {
+          @apply(--layout-horizontal);
+          display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -ms-flex-direction: row;
+        -webkit-flex-direction: row;
+        flex-direction: row;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: white;
+        border: 1px solid #ddd;
+        max-width: 1500px;
+        margin: 16px auto 0 auto;
+        }
+
+        .avatar {
+          height: 40px;
+          width: 40px;
+          border-radius: 20px;
+          box-sizing: border-box;
+          border: 1px solid #DDD;
+          background-color: #DDD;
+        }
+
+        .pad {
+          padding: 0 16px;
+          @apply(--layout-flex);
+          @apply(--layout-vertical);
+        }
+
+        .primary {
+          font-size: 16px;
+        }
+
+        .secondary {
+          font-size: 14px;
+        }
+
+        .dim {
+          color: gray;
+        }
+
+        .border {
+          margin-left: 72px;
+          border-bottom: 1px solid #DDD;
+        }
+
+        iron-icon {
+          width: 12px;
+          height: 24px;
+        }
+        .item:focus {
+            outline: 0;
+            border-color: #333;
+        }
+        .erromess {
+          color: red
+        }
+
+        paper-card.rate { @apply(--layout-horizontal); }
+        .rate-image {
+            width: 100px;
+            height: 170px;
+            background: url('./donuts.png');
+            background-size: cover;
+        }
+        .rate-content {
+            @apply(--layout-flex);
+            float: left;
+        }
+        .rate-header { @apply(--paper-font-headline); }
+        .rate-name { color: var(--paper-grey-600); margin: 10px 0; }
+        paper-icon-button.rate-icon {
+            --iron-icon-fill-color: white;
+            --iron-icon-stroke-color: var(--paper-grey-600);
+        }
+
+        .paper-icon-button-0{
+            width: 32px!important;
+        }
+		.caja-viaje{
+		  border: 8px solid brown;
+		  border-radius: 5px;
+		}
+		.exterior{
+		  padding-top: 14px;
+
+		}
+		.titulo > a:link {
+			text-decoration: none;
+		}
+		.titulo > a:link {
+			background-color: yellow;
+		}
+
+		.titulo > a:visited {
+			background-color: cyan;
+		}
+
+		.titulo > a:hover {
+			background-color: lightgreen;
+		}
+
+		.titulo > a:active {
+			background-color: hotpink;
+		}
+		.boton{
+		   margin-right : 5px;
+		}
+
+
+
+  </style>
+    <style include="iron-flex"></style>
+  <template>
+      <!-- Data-bindings del DOM local -->
+
+    <iron-ajax auto url="http://viajesolo.esy.es/service/script.php"
+    params= "{{ajaxParams}}"
+    handle-as="json"
+    debounce-duration="300"
+    method="POST"
+    last-response="{{response}}"
+    >
+    </iron-ajax>
+
+    <form is="iron-form" method="get" action="/service/script.php" id="formExample">
+
+           <paper-input char-counter error-message="{{error_username}}" name="username" value="{{username}}" label="Nombre de usuario" maxlength="25"
+                        required></paper-input>
+           <br>
+           <paper-input name="nombre" label="Nombre" value="{{name}}" error-message="{{error_name}}" maxlength="25" required></paper-input>
+           <paper-input name="apellido" label="Apellidos" value="{{lastname}}" error-message="{{error_lastname}}" maxlength="25" required></paper-input>
+           <paper-input name="password" label="Constraseña" type="password" value="{{password}}" error-message="{{error_password}}" maxlength="25" required></paper-input>
+           <gold-email-input label="Dirección de correo electronico" name="email" value="{{email}}" error-message="{{error_email}}" maxlength="25" required></gold-email-input>
+     <paper-input name="fileToUpload" id="fileToUpload" label="Avatar" type="file" value="{{fileToUpload}}" maxlength="25"></paper-input>
+
+           <paper-input name="tipo"  type="hidden" style="display: none;" value="{{tipo}}" maxlength="25"></paper-input>
+           <paper-dropdown-menu label="Tipo favorito" name="favorito" required>
+               <paper-menu class="dropdown-content">
+                   <paper-item value="volvo">Aventura</paper-item>
+                   <paper-item value="saab">Romantico</paper-item>
+                   <paper-item value="fiat">Tranquilo</paper-item>
+                   <paper-item value="audi">Deportivo</paper-item>
+               </paper-menu>
+           </paper-dropdown-menu>
+           <br>
+
+           <paper-checkbox name="terms" required>I agree</paper-checkbox>
+           <br><br>
+
+           <paper-button raised class="custom indigo" onclick="document.getElementById('formExample').submit()">
+               <iron-icon icon="icons:send"></iron-icon>
+               Enviar1
+           </paper-button>
+
+           <div class="output"></div>
+           <br>
+           <div class="outputServer"></div>
+           <br>
+       </form>
+
+
+
+
+</template>
+</dom-module>
+
+<script>
+
+Polymer({
+    is: "vista-viaje",
+         properties: {
+		    persistedData: {
+			   type: Object
+			},
+		    tipo:{
+               type: String,
+               value: "viajeInformacion"
+            },
+            usuario: {
+              type: String,
+              value:""
+            },
+            password: {
+                type: String,
+                value:""
+            },
+            info: {
+                type: Object,
+				        notify: true
+            },
+            iniciado:{
+                type: Boolean,
+                value: false
+            },
+            ajaxParams: {
+                type: String,
+                computed: 'processParams(tipo, idviaje)'
+            }
+        },
+        listeners: {
+            'iron-form-response': 'formResponse',
+            'iron-form-submit': 'formSubmit',
+            'iron-form-error': 'formError'
+        },
+        formSubmit: function (event) {
+           // this.querySelector('.info-login').innerHTML = JSON.stringify(event.detail);
+        },
+        formResponse: function (event, response) {
+            console.log(event.detail);
+            if (200 === response.xhr.status) {
+                var data = response.xhr;
+                console.log(response);
+				this.info= data.response;
+
+                console.log("info ");
+				console.log(this.info);
+				if(this.info.exito){
+				this.info.iniciado = true;
+				document.location.href = '/';
+				}else{
+				this.querySelector('.info-loginServer').innerHTML = "Los datos son incorrectos";
+				}
+            }
+        },
+        formError: function (event) {
+            this.querySelector('.info-loginServer').innerHTML = event.detail.error;
+        },
+		initializeDefaultCartoon: function() {
+		  this.info = {
+			Idusuario: "pepe"
+		  }
+		},
+		cargar: function() {
+		   this.info=info;
+
+		},
+		processParams: function(tipo1, idviaje1) {
+			return {
+				alt: "json",
+				q: "chrome",
+				tipo: tipo1,
+         idviaje: idviaje1
+			};
+		}
+  });
+</script>

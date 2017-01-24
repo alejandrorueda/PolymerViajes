@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <!-- Dependencias/Elementos -->
+    <link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+</head>
+
+<dom-module id="nuevo-viaje">
+  <style is="custom-style">
+    /* Reglas CSS para tu elemento */
+	 paper-button.custom:hover {
+        background-color: var(--paper-indigo-100);
+    }
+
+    paper-button.indigo {
+        background-color: var(--paper-indigo-500);
+        color: white;
+        --paper-button-raised-keyboard-focus: {
+            background-color: var(--paper-pink-a200) !important;
+            color: white !important;
+        };
+    }
+  </style>
+
+  <template>
+      <!-- Data-bindings del DOM local -->
+
+
+
+<!--<form is="iron-form" method="get" action="/" id="basic">
+  <paper-input name="usuario" label="Nombre de usuario" required></paper-input>
+  <paper-input name="nombre" label="Nombre" required></paper-input>
+  <paper-input name="apellido" label="Apellidos" required></paper-input>
+  <paper-input name="password" label="Constrase�a" type="password" required></paper-input>
+  <gold-email-input label="Direcci�n de correo electronico"></gold-email-input>
+  <br>
+  <paper-dropdown-menu label="Cars" name="cars" required>
+    <paper-menu class="dropdown-content">
+      <paper-item value="volvo">Volvo</paper-item>
+      <paper-item value="saab">Saab</paper-item>
+      <paper-item value="fiat">Fiat</paper-item>
+      <paper-item value="audi">Audi</paper-item>
+    </paper-menu>
+  </paper-dropdown-menu>
+  <paper-button raised onclick="_submit(event)">Submit</paper-button>
+  <paper-button raised onclick="_reset(event)">Reset</paper-button>
+  <div class="output"></div>
+</form>-->
+
+     <form is="iron-form" method="post" action="/service/script.php" id="viaje">
+
+            <paper-input char-counter error-message="{{error_nombre}}" name="nombre" value="{{nombre}}" label="Nombre del viaje" maxlength="25"
+                         required></paper-input>
+            <br>
+            <paper-input name="destino" label="Destino" value="{{destino}}" error-message="{{error_destino}}" maxlength="25" required></paper-input>
+            <paper-input name="precio" label="Precio" type="number" value="{{precio}}" error-message="{{error_precio}}" maxlength="25"></paper-input>
+            <paper-input label="Fecha de origen" name="fecha_origen" value="{{fecha_origen}}" error-message="{{error_origen}}" type="date"></paper-input>
+            <paper-input label="Fecha de fin" name="fecha_fin" value="{{fecha_fin}}" error-message="{{error_fin}}" type="date"></paper-input>
+
+			<paper-input name="fileToUpload" id="fileToUpload" label="Imagen" type="file" value="{{fileToUpload}}" maxlength="25"></paper-input>
+             <paper-dropdown-menu label="Tipo de viaje" name="tipo_viaje" required>
+                <paper-menu class="dropdown-content">
+                    <paper-item value="aventura">Aventura</paper-item>
+                    <paper-item value="romantico">Romantico</paper-item>
+                    <paper-item value="relax">Relax</paper-item>
+                    <paper-item value="montanismo">Monta�ismo</paper-item>
+                </paper-menu>
+            </paper-dropdown-menu>
+			<iron-autogrow-textarea name="informacion" label="Informacion" value="{{informacion}}" error-message="{{error_informacion}}" style="height: 171px; width: 899px;" maxlength="10000" required></iron-autogrow-textarea>
+
+
+            <paper-input name="tipo"  type="hidden" style="display: none;" value="{{tipo}}" maxlength="25"></paper-input>
+            <paper-input name="usuario"  type="hidden" style="display: none;" value="{{usuario}}" maxlength="25"></paper-input>
+            <paper-input name="password"  type="hidden" style="display: none;" value="{{password}}" maxlength="25"></paper-input>
+            <br>
+
+            <paper-checkbox name="terms" required>I agree</paper-checkbox>
+            <br><br>
+
+            <paper-button raised class="custom indigo" onclick="document.getElementById('viaje').submit()">
+                <iron-icon icon="icons:send"></iron-icon>
+                Enviar
+            </paper-button>
+
+            <div class="output"></div>
+            <br>
+            <div class="outputServer"></div>
+            <br>
+        </form>
+     <!--<template id="tasks" is="dom-repeat" items="{{response}}">
+			<p>{{item.NOMBRE}}</p>
+
+      </template>-->
+
+</template>
+</dom-module>
+
+<script>
+
+
+  Polymer({
+    is: "nuevo-viaje",
+         properties: {
+		    tipo:{
+               type: String,
+               value: "nuevoViaje"
+            },
+            nombre: {
+                type: String,
+                value: ""
+            },
+            error_nombre: {
+                type: String,
+                value:"El nombre es invalido"
+            },
+            error_informacion: {
+                type: String,
+                value: "La informacion es invalida"
+            },
+            informacion: {
+                type: String,
+                value: ""
+            },
+            destino: {
+                type: String,
+                value: ""
+            },
+            error_destino: {
+                type: String,
+                value: "El destino es invalido"
+            },
+            precio: {
+                type: Number,
+                value: 0
+            },
+            error_precio: {
+                type: String,
+                value: "El precio es invalido"
+            },
+            fecha_origen: {
+                type: Date,
+                value: "0/0/0"
+            },
+            error_origen: {
+                type: String,
+                value: "La fecha de  origen es invalida"
+            },
+            fecha_fin: {
+                type: Date,
+                value: "0/0/0"
+            },
+            error_fin: {
+                type: String,
+                value: "La fecha de fin es invalida"
+            },
+            usuario: {
+                type: String,
+                value: ""
+            },
+            password: {
+                type: String,
+                value: ""
+            }
+        },
+        listeners: {
+            'iron-form-response': 'formResponse',
+            'iron-form-submit': 'formSubmit',
+            'iron-form-error': 'formError'
+        },
+        formSubmit: function (event) {
+          //  this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
+        },
+        formResponse: function (event, response) {
+            console.log(event.detail);
+            if (200 === response.xhr.status) {
+                var data = response.xhr;
+                console.log(response);
+                if(!data.response.exito){
+                    this.querySelector('.outputServer').innerHTML = "Error al crear el viaje, por favor intentelo mas tarde";
+                }
+            }
+        },
+        formError: function (event) {
+            this.querySelector('.outputServer').innerHTML = event.detail.error;
+        }
+  });
+</script>

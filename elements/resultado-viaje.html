@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+ <head>
+
+    <!-- Dependencias/Elementos -->
+    <link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+</head>
+
+<dom-module id="resultado-viaje">
+  <style is="custom-style">
+    /* Reglas CSS para tu elemento */
+
+            .caption {
+                padding-left: 12px;
+                color: #a0a0a0;
+            }
+            #grade {
+                --paper-slider-secondary-color: var(--paper-red-a200);
+            }
+
+          :host {
+          @apply (--layout-fit);
+          @apply (--layout-vertical);
+
+          display: block;
+          font-family: sans-serif;
+        }
+
+        #searchTerm {
+          padding: 0 16px;
+        }
+
+        .toolbar {
+          background: #E91E63;
+          box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+          color: white;
+        }
+
+        #list {
+          @apply (--layout-flex);
+
+        }
+
+        .item {
+          @apply(--layout-horizontal);
+          display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -ms-flex-direction: row;
+        -webkit-flex-direction: row;
+        flex-direction: row;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: white;
+        border: 1px solid #ddd;
+        max-width: 1500px;
+        margin: 16px auto 0 auto;
+        }
+
+        .avatar {
+          height: 40px;
+          width: 40px;
+          border-radius: 20px;
+          box-sizing: border-box;
+          border: 1px solid #DDD;
+          background-color: #DDD;
+        }
+
+        .pad {
+          padding: 0 16px;
+          @apply(--layout-flex);
+          @apply(--layout-vertical);
+        }
+
+        .primary {
+          font-size: 16px;
+        }
+
+        .secondary {
+          font-size: 14px;
+        }
+
+        .dim {
+          color: gray;
+        }
+
+        .border {
+          margin-left: 72px;
+          border-bottom: 1px solid #DDD;
+        }
+
+        iron-icon {
+          width: 12px;
+          height: 24px;
+        }
+        .item:focus {
+            outline: 0;
+            border-color: #333;
+        }
+        .erromess {
+          color: red
+        }
+
+        paper-card.rate { @apply(--layout-horizontal); }
+        .rate-image {
+            width: 100px;
+            height: 170px;
+            background: url('./donuts.png');
+            background-size: cover;
+        }
+        .rate-content {
+            @apply(--layout-flex);
+            float: left;
+        }
+        .rate-header { @apply(--paper-font-headline); }
+        .rate-name { color: var(--paper-grey-600); margin: 10px 0; }
+        paper-icon-button.rate-icon {
+            --iron-icon-fill-color: white;
+            --iron-icon-stroke-color: var(--paper-grey-600);
+        }
+
+        .paper-icon-button-0{
+            width: 32px!important;
+        }
+		.caja-viaje{
+		  border: 8px solid brown;
+		  border-radius: 5px;
+		}
+		.exterior{
+		  padding-top: 14px;
+
+		}
+		.titulo > a:link {
+			text-decoration: none;
+		}
+		.titulo > a:link {
+			//background-color: yellow;
+		}
+
+		.titulo > a:visited {
+			background-color: cyan;
+		}
+
+		.titulo > a:hover {
+			color: lightgreen;
+		}
+
+		.titulo > a:active {
+			color: brown;
+		}
+
+  </style>
+
+  <template>
+      <!-- Data-bindings del DOM local -->
+
+    <iron-ajax auto url="/service/script.php"
+	headers='{"Content-Type": "application/json;charset=utf-8"}'
+    params= "{{ajaxParams}}"
+    handle-as="json"
+    debounce-duration="300"
+    method="POST"
+    last-response="{{response}}"
+    >
+    </iron-ajax>
+
+	  <!--  <iron-ajax auto url="http://viajesolo.esy.es/service/script.php"
+    params='{{ajaxParams}}'
+    handle-as="json"
+    debounce-duration="300"
+    method="POST"
+    last-response="{{response}}"
+    >
+    </iron-ajax>-->
+
+     <!--<template id="tasks" is="dom-repeat" items="{{response}}">
+			<p>{{item.NOMBRE}}</p>
+
+      </template>-->
+            <div style="text-align: center;">
+                  <a href="{{baseUrl}}nuevoviaje">
+                    <paper-button class="boton-enviar" raised >Crea Viaje</paper-button>
+
+                  </a>
+            </div>
+    <iron-list items="[[response]]" as="item">
+        <template>
+		<div class="exterior">
+
+				 <paper-material  elevation="3">
+				   <div class="caja-viaje">
+					<h1 class="titulo" tabindex="-1"><a href$="{{baseUrl}}viaje/{{item.Idviaje}}">{{item.Nombre}}</a></h1>
+					<label for="greeting-input">
+
+					Destino: {{item.Destino}}
+					</label>
+
+					<p class="subhead">
+						<html-echo html="{{item.Informacion}}"></html-echo>
+					</p>
+				  </div>
+				  </paper-material>
+
+		</div>
+		</br></br></br>
+         </template>
+
+        </iron-list>-
+
+
+</template>
+</dom-module>
+
+<script>
+
+Polymer({
+    is: "resultado-viaje",
+         properties: {
+		    persistedData: {
+			   type: Object
+			},
+		    tipo:{
+               type: String,
+               value: "viajes"
+            },
+            usuario: {
+                type: String,
+                value: ""
+            },
+            password: {
+                type: String,
+                value:""
+            },
+            info: {
+                type: Object,
+				notify: true,
+                value: {
+				   iniciado: false
+				}
+            },
+            ajaxParams: {
+                type: String,
+                computed: 'processParams(tipo, usuario, password)'
+            }
+        },
+        listeners: {
+            'iron-form-response': 'formResponse',
+            'iron-form-submit': 'formSubmit',
+            'iron-form-error': 'formError'
+        },
+        formSubmit: function (event) {
+           // this.querySelector('.info-login').innerHTML = JSON.stringify(event.detail);
+        },
+        formResponse: function (event, response) {
+            console.log(event.detail);
+            if (200 === response.xhr.status) {
+                var data = response.xhr;
+                console.log(response);
+				this.info= data.response;
+
+                console.log("info ");
+				console.log(this.info);
+				if(this.info.exito){
+				this.info.iniciado = true;
+				document.location.href = '/';
+				}else{
+				this.querySelector('.info-loginServer').innerHTML = "Los datos son incorrectos";
+				}
+            }
+        },
+        formError: function (event) {
+            this.querySelector('.info-loginServer').innerHTML = event.detail.error;
+        },
+		initializeDefaultCartoon: function() {
+		  this.info = {
+			Idusuario: "pepe"
+		  }
+		},
+		cargar: function() {
+		   this.info=info;
+
+		},
+		processParams: function(tipo1,usuario1, password1) {
+			return {
+				alt: "json",
+				q: "chrome",
+				tipo: tipo1,
+				usuario: usuario1,
+				password: password1
+			};
+		}
+  });
+</script>

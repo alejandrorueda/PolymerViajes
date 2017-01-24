@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="viajes" defaultIdMethod="native">
+  <table name="usuario" phpName="Usuario">
+    <column name="idusuario" type="varchar" size="24" required="true" primaryKey="true" />
+    <column name="password" type="varchar" size="255" required="true" />
+    <column name="nombre" type="varchar" size="24" required="true" phpName="Nombre"/>
+	<column name="apellidos" type="varchar" size="24" required="true" phpName="Apellidos"/>
+	<column name="avatar" type="varchar" size="24" required="true" phpName="Avatar"/>
+	<column name="email" type="varchar" size="50" required="true" phpName="Email"/>
+	
+    <column name="idperfil" type="integer" required="true" />
+    <foreign-key foreignTable="perfil">
+		<reference local="idperfil" foreign="idperfil"/>
+	</foreign-key>
+	  
+  </table>
+  
+  <table name="perfil" phpName="Perfil">
+    <column name="idperfil" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+    <column name="descripcion" type="varchar"/>
+	<column name="tipo_favorito" type="set" valueSet = "aventura,romantico,tranquilo,deportivo" />
+	<column name="gustos" type="set" valueSet = "tecnologia,naturaleza,urbano,cultural"/>
+	<column name="nacimiento" type="DATE"/>
+	<column name="destinos" type="set" valueSet = "europa,nacional,cualquier destino,america,asia,oceania,africa"/>
+
+  </table>
+  
+   <table name="invitacion" phpName="Invitacion">
+	  <column name="idusuario" size="24" type="varchar" primaryKey="true"/>
+	  <column name="codigo"  size="128" type="varchar" primaryKey="true"/>
+	  <column name="activo" type="boolean" primaryKey="true"/>
+
+    <foreign-key foreignTable="usuario">
+		<reference local="idusuario" foreign="idusuario"/>
+	</foreign-key>
+
+  </table>
+  
+  <table name="usuario_amigo" isCrossRef="true">
+	  <column name="idusuario" size="24" type="varchar" primaryKey="true"/>
+	  <column name="idamigo"  size="24" type="varchar" primaryKey="true"/>
+	  <foreign-key foreignTable="usuario" name="usuario" >
+		<reference local="idusuario" foreign="idusuario"/>
+	  </foreign-key>
+	  <foreign-key foreignTable="usuario" name="amigo">
+		<reference local="idamigo" foreign="idusuario"/>
+	  </foreign-key>
+  </table>
+  
+  
+  
+  
+  <table name="grupo" isCrossRef="true" phpName="Grupo">
+	  <column name="idgrupo" type="integer" primaryKey="true" required="true" autoIncrement="true"/>
+	  <column name="informacion" size="255" type="LONGVARCHAR" required="true"/>
+	  <column name="nombre" size="50" type="varchar" primaryKey="true" required="true"/>
+	  <column name="administrador" type="boolean"/>
+
+
+  </table>
+  
+  <table name="miembros_grupo" isCrossRef="true">
+	  <column name="idgrupo" type="integer" primaryKey="true"/>
+	  <column name="idusuario" size="24" type="varchar" primaryKey="true"/>
+	  <foreign-key foreignTable="grupo">
+		<reference local="idgrupo" foreign="idgrupo"/>
+	  </foreign-key>
+	  <foreign-key foreignTable="usuario">
+		<reference local="idusuario" foreign="idusuario"/>
+	  </foreign-key>
+  </table>
+  
+  <table name="viaje" phpName="Viaje">
+	  <column name="idviaje" type="integer" primaryKey="true" autoIncrement="true"/>
+	  <column name="nombre" size="50" type="varchar" required="true"/>
+	  <column name="informacion" type="LONGVARCHAR" required="true"/>
+	  <column name="transporte" type="LONGVARCHAR" required="true"/>
+	  <column name="hospedaje" type="LONGVARCHAR" required="true"/>
+	  <column name="destino" size="100" required="true" type="varchar" />
+	  <column name="fecha_inicio" type="DATE" />
+	  <column name="fecha_final" type="DATE" />
+	  <column name="precio" type="DOUBLE"/>
+	  <column name="imagenes" type="ARRAY"/>
+	  <column name="etiquetas" type="ARRAY"/>
+
+	  
+
+  </table>
+  
+    <table name="viaje_mensajes" isCrossRef="true">
+	  <column name="idviaje" type="integer" primaryKey="true"/>
+	  <column name="idmensaje" type="integer" primaryKey="true"/>
+	  
+	  <foreign-key foreignTable="viaje">
+		<reference local="idviaje" foreign="idviaje"/>
+	  </foreign-key>
+	  <foreign-key foreignTable="mensaje">
+		<reference local="idmensaje" foreign="idmensaje"/>
+	  </foreign-key>
+  </table>
+  
+  <table name="viaje_usuario" isCrossRef="true">
+	  <column name="idviaje" type="integer" primaryKey="true"/>
+	  <column name="idusuario" size="24" type="varchar" primaryKey="true"/>
+	  <column name="administrador" size="24" type="boolean"/>
+	  
+	  <foreign-key foreignTable="viaje">
+		<reference local="idviaje" foreign="idviaje"/>
+	  </foreign-key>
+	  <foreign-key foreignTable="usuario">
+		<reference local="idusuario" foreign="idusuario"/>
+	  </foreign-key>
+  </table>
+  
+   <table name="grupo_viaje" isCrossRef="true">
+	  <column name="idgrupo" type="integer" primaryKey="true"/>
+	  <column name="idviaje" type="integer" primaryKey="true"/>
+	  <column name="favorito" type="BOOLEAN" primaryKey="true"/>
+	  <foreign-key foreignTable="grupo">
+		<reference local="idgrupo" foreign="idgrupo"/>
+	  </foreign-key>
+	  <foreign-key foreignTable="viaje">
+		<reference local="idviaje" foreign="idviaje"/>
+	  </foreign-key>
+  </table>
+  
+  <table name="mensaje" phpName="Mensaje">
+    <column name="idmensaje" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+    <column name="descripcion" type="LONGVARCHAR" required="true"/>
+	<column name="asunto" type="varchar" size="255" required="true"/>
+	
+    <column name="idusuario" size="24" type="varchar" required="true" />
+    <foreign-key foreignTable="usuario">
+		<reference local="idusuario" foreign="idusuario"/>
+	  </foreign-key>
+  </table>
+  
+  <table name="mensaje_respuesta" isCrossRef="true">
+	  <column name="idmensaje" type="integer" primaryKey="true"/>
+	  <column name="idrespuesta" type="integer" primaryKey="true"/>
+	  <foreign-key foreignTable="mensaje" name="padre">
+		<reference local="idmensaje" foreign="idmensaje"/>
+	  </foreign-key>
+	 <foreign-key foreignTable="mensaje" name="respuesta">
+		<reference local="idrespuesta" foreign="idmensaje"/>
+	  </foreign-key>
+   </table>
+
+</database>
+

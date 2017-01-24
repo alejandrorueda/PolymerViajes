@@ -1,0 +1,10 @@
+{
+    "name": "me/propel-project",
+    "autoload": {
+        "psr-0": { "": ""}
+    },
+    "require": {
+        "propel/propel": "~2.0@dev", 
+		"monolog/monolog": ">=1.1.0"
+    }
+}

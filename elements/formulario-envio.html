@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <!-- Dependencias/Elementos -->
+    <link href="../bower_components/polymer/polymer.html" rel="import">
+
+
+</head>
+
+<dom-module id="formulario-envio">
+  <style is="custom-style">
+    /* Reglas CSS para tu elemento */
+
+            .caption {
+                padding-left: 12px;
+                color: #a0a0a0;
+            }
+            #grade {
+                --paper-slider-secondary-color: var(--paper-red-a200);
+            }
+
+          :host {
+          @apply (--layout-fit);
+          @apply (--layout-vertical);
+
+          display: block;
+          font-family: sans-serif;
+        }
+
+        #searchTerm {
+          padding: 0 16px;
+        }
+
+        .toolbar {
+          background: #E91E63;
+          box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+          color: white;
+        }
+
+        #list {
+          @apply (--layout-flex);
+
+        }
+
+        .item {
+          @apply(--layout-horizontal);
+          display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -ms-flex-direction: row;
+        -webkit-flex-direction: row;
+        flex-direction: row;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: white;
+        border: 1px solid #ddd;
+        max-width: 1500px;
+        margin: 16px auto 0 auto;
+        }
+
+        .avatar {
+          height: 40px;
+          width: 40px;
+          border-radius: 20px;
+          box-sizing: border-box;
+          border: 1px solid #DDD;
+          background-color: #DDD;
+        }
+
+        .pad {
+          padding: 0 16px;
+          @apply(--layout-flex);
+          @apply(--layout-vertical);
+        }
+
+        .primary {
+          font-size: 16px;
+        }
+
+        .secondary {
+          font-size: 14px;
+        }
+
+        .dim {
+          color: gray;
+        }
+
+        .border {
+          margin-left: 72px;
+          border-bottom: 1px solid #DDD;
+        }
+
+        iron-icon {
+          width: 12px;
+          height: 24px;
+        }
+        .item:focus {
+            outline: 0;
+            border-color: #333;
+        }
+        .erromess {
+          color: red
+        }
+
+        paper-card.rate { @apply(--layout-horizontal); }
+        .rate-image {
+            width: 100px;
+            height: 170px;
+            background: url('./donuts.png');
+            background-size: cover;
+        }
+        .rate-content {
+            @apply(--layout-flex);
+            float: left;
+        }
+        .rate-header { @apply(--paper-font-headline); }
+        .rate-name { color: var(--paper-grey-600); margin: 10px 0; }
+        paper-icon-button.rate-icon {
+            --iron-icon-fill-color: white;
+            --iron-icon-stroke-color: var(--paper-grey-600);
+        }
+
+        .paper-icon-button-0{
+            width: 32px!important;
+        }
+
+        .formulario-envio-0 {
+            right: 720px !important;
+            left: 34px !important;
+            top: 98px !important;
+
+        }
+  </style>
+
+  <template>
+      <!-- Data-bindings del DOM local -->
+
+
+     <!--<template id="tasks" is="dom-repeat" items="{{response}}">
+			<p>{{item.NOMBRE}}</p>
+
+      </template>-->
+
+
+
+        <form is="iron-form" method="get"   action="/service/script.php" id="nuevomensaje">
+            <paper-input name="asunto" label="Asunto" value="{{asunto}}" error-message="{{error_asunto}}" required></paper-input>
+            <iron-autogrow-textarea label="Mensaje" name="descripcion" value="{{mensaje}}" style="min-height: 141px;" error-message="{{error_mensaje}}" required></iron-autogrow-textarea>
+            <paper-input name="tipo"  type="hidden" style="display: none;" value="{{tipo}}"></paper-input>
+			<paper-input name="usuario"  type="hidden" style="display: none;" value="{{usuario}}"></paper-input>
+			<paper-input name="password"  type="hidden" style="display: none;" value="{{password}}"></paper-input>
+      <paper-input name="idviaje"  type="hidden" style="display: none;" value="{{idviaje}}"></paper-input>
+
+
+
+			</br></br>
+            <paper-checkbox name="terms" required>I agree</paper-checkbox>
+            </br></br>
+
+            <paper-button raised class="custom indigo" onclick="document.getElementById('nuevomensaje').submit()">
+                <iron-icon icon="icons:send"></iron-icon>
+                Enviar
+            </paper-button>
+            <div class="output"></div>
+        </form>
+
+
+</template>
+</dom-module>
+
+<script>
+
+  Polymer({
+    is: "formulario-envio",
+    properties: {
+        // declaramos las propiedades del elemento
+        idviaje: {
+            type: Number
+        },
+        mensaje: {
+            type: String,
+            value: ""
+        },
+        asunto: {
+            type: String,
+            value: ""
+        },
+        tipo: {
+            type: String,
+            value: "nuevomensaje"
+        },
+        error_mensaje: {
+            type: String,
+            value: "El mensaje es invalido"
+        }
+		,
+        error_asunto: {
+            type: String,
+            value: "El asunto es invalido"
+        }
+    },
+        listeners: {
+            'iron-form-response': 'formResponse',
+            'iron-form-submit': 'formSubmit',
+            'iron-form-error': 'formError'
+        },
+        formSubmit: function (event) {
+           // this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
+        },
+        formResponse: function (event, response) {
+            console.log(event.detail);
+            if (200 === response.xhr.status) {
+                var data = response.xhr;
+                console.log(response);
+				if(!data.response.exito){
+					this.querySelector('.output').innerHTML = "Error al enviar el mensaje, por favor intentelo mas tarde.";
+				}
+        else{
+          document.location.href = '/';
+        }
+            }
+        },
+        formError: function (event) {
+            this.querySelector('.output').innerHTML = event.detail.error;
+        }
+  });
+</script>

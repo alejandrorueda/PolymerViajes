@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <!-- Dependencias/Elementos -->
+    <link rel="import" href="../bower_components/polymer/polymer.html">
+
+	
+</head>
+
+<dom-module id="boton-usuario">
+
+<style is="custom-style">
+  paper-dropdown-menu.custom {
+    --paper-input-container-label: {
+      color: white;
+      text-align: center;
+      font-weight: bold;
+    };
+    --paper-input-container-input: {
+      color: var(--paper-indigo-500);
+      font-style: normal;
+      font-family: serif;
+      text-transform: uppercase;
+    }
+    /* no underline */
+    --paper-input-container-underline: {
+      display: none;
+    };
+  }
+
+  paper-dropdown-menu-light.custom {
+    --paper-dropdown-menu-label: {
+      color: white;
+      text-align: center;
+      font-weight: bold;
+	  font-size: 15px;
+    };
+    --paper-dropdown-menu-input: {
+      color: var(--paper-indigo-500);
+      font-style: normal;
+      font-family: serif;
+      text-transform: uppercase;
+      /* no underline */
+      border-bottom: none;
+    }
+  }
+</style>
+  <template>
+      <!-- Data-bindings del DOM local -->
+
+<paper-dropdown-menu-light class="custom" label="{{info.nombre}}" no-label-float>
+  <paper-listbox class="dropdown-content">
+    <paper-item >Mi cuenta</paper-item>
+    <paper-item on-click="cerrar">Cerrar Sesion</paper-item>
+  </paper-listbox>
+</paper-dropdown-menu-light>
+
+</template>
+</dom-module>
+
+<script>
+(function() {
+var info;   
+
+  Polymer({
+    is: "boton-usuario",
+         properties: {
+		    info: {
+			   type: Object,
+			   notify: true
+			},
+		    nombre:{
+               type: String,
+               value: ""
+            }
+        },
+		cerrar: function() {
+		   this.set('info',null);
+		   document.location.href = '/';
+		},
+		cargar: function() {
+		   this.info=info;
+		
+		}
+  });
+ })();
+</script>
